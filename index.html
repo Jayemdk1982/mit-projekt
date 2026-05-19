@@ -45,7 +45,6 @@
       --green-bg: #f0fdf4;
       --danger: #dc2626;
       --stat-bg: #ffffff;
-      /* EN SUPER BLØD, MEN MARKANT DYBERE SKYGGE TIL LIGHT MODE */
       --shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.12), 0 10px 20px -10px rgba(0, 0, 0, 0.08), 0 0 1px 0 rgba(0, 0, 0, 0.25);
       --radius: 10px;
       --font: 'DM Sans', sans-serif;
@@ -68,7 +67,6 @@
       --green: #4ade80;
       --green-bg: #052e16;
       --stat-bg: #1c1b1a;
-      /* RIGTIG TUNG OG LÆKKER SKYGGE/GLØD TIL DARK MODE */
       --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 12px 24px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
       
       --textarea-bg: #151413;
@@ -86,7 +84,6 @@
       min-height: 100vh;
     }
 
-    /* Layout Logic for Legal & Personal pages */
     body.is-legal .tool-section, 
     body.is-legal .bottom-content { display: none; }
     body.is-legal .legal-full-content { display: block; max-width: 800px; margin: 40px auto; padding: 0 24px; text-align: center; }
@@ -94,7 +91,6 @@
     body.is-legal .legal-full-content h3 { margin-top: 25px; margin-bottom: 10px; color: var(--accent); }
     body.is-legal .legal-full-content p { margin-bottom: 15px; color: var(--text-muted); }
 
-    /* ── CENTERED HEADER ── */
     header {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
@@ -159,10 +155,8 @@
     .tool-header h1 { font-size: clamp(22px, 3vw, 36px); font-weight: 700; letter-spacing: -.03em; line-height: 1.2; margin-bottom: 8px; }
     .tool-header p { color: var(--text-muted); font-size: 17px; max-width: 700px; margin: 0 auto; font-weight: 400; }
 
-    /* Main Workspace Grid */
     .main-grid { display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start; margin-bottom: 48px; }
 
-    /* Symmetri: Sikrer præcis samme afstand over og under stat-boksene */
     .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 24px; margin-bottom: 24px; padding: 0 25px; }
     @media (max-width: 640px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
 
@@ -171,10 +165,8 @@
     .stat-label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
     .stat-value { font-size: 22px; font-weight: 600; font-family: var(--mono); color: var(--text); letter-spacing: -.02em; line-height: 1; }
 
-    /* Workspace container med dyb skygge, så den popper ud fra baggrunden */
     .workspace { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; }
     
-    /* Tekstfelt i toppen */
     textarea { width: 100%; min-height: 340px; padding: 25px; font-family: var(--font); font-size: 16px; line-height: 1.7; color: var(--text); background: var(--textarea-bg); border: none; border-bottom: 1px solid var(--border); outline: none; resize: vertical; transition: background var(--transition); }
 
     .toolbar { padding: 16px 25px; display: flex; flex-wrap: wrap; gap: 7px; align-items: center; background: var(--surface2); }
@@ -183,7 +175,6 @@
     .btn { font-family: var(--font); font-size: 12.5px; font-weight: 500; padding: 6px 13px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
     .btn.highlighted { border-color: var(--accent); background: var(--accent-muted); color: var(--accent); }
      
-    /* MEGET TYDELIGERE UNDO-KNAP (mørkere kant, skygge, og aktiv hover-effekt) */
     .btn-undo { font-family: var(--font); font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--text-muted); background: var(--surface); color: var(--text); cursor: pointer; margin-left: auto; display: flex; align-items: center; gap: 4px; transition: all var(--transition); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .btn-undo:hover:not(:disabled) { background: var(--surface2); border-color: var(--text); color: var(--accent); }
     .btn-undo:disabled { opacity: 0.3; cursor: not-allowed; border-color: var(--border); box-shadow: none; }
@@ -192,7 +183,6 @@
     .btn-copy.has-text { background: var(--accent); color: #fff; border-color: var(--accent); }
     .btn-clear { font-family: var(--font); font-size: 12.5px; font-weight: 500; padding: 6px 13px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--danger); cursor: pointer; }
 
-    /* ── BOTTOM CONTENT ── */
     .bottom-content { max-width: 900px; margin: 0 auto; text-align: center; }
      
     .seo-section { padding-top: 40px; border-top: 1px solid var(--border); }
@@ -280,6 +270,7 @@
               <div class="toolbar-sep"></div>
               <button class="btn" id="btn-cleanspaces" onclick="applyTransform('cleanspaces')">Clean Spaces</button>
               <button class="btn" id="btn-cleanpdftext" onclick="applyTransform('cleanpdftext')">Fix PDF (Keep Paragraphs)</button>
+              <button class="btn" id="btn-stripmarkdown" onclick="applyTransform('stripmarkdown')">Strip AI Formatting</button>
               <button class="btn" id="btn-removelinebreaks" onclick="applyTransform('removelinebreaks')">Merge Into 1 Line</button>
               <div class="toolbar-sep"></div>
               <button class="btn-undo" id="undoBtn" onclick="undo()" disabled>↩ Undo</button>
@@ -301,16 +292,16 @@
             <h3>Common Use Cases</h3>
             <div class="use-cases-grid">
               <div class="use-case-card">
-                <h4>📱 Social Media</h4>
-                <p>Perfect for formatting Instagram captions, X posts, and LinkedIn updates to ensure they stay within limits.</p>
+                <h4>🤖 AI & CMS Workflows</h4>
+                <p>Clean messy Markdown artifacts, star-tags, and hidden text-formatting when copying content between ChatGPT, Google Docs, and WordPress.</p>
               </div>
               <div class="use-case-card">
-                <h4>🎓 Academic</h4>
-                <p>A reliable tool for students and researchers to verify word counts for essays and academic manuscripts.</p>
+                <h4>🎓 Academic & Writers</h4>
+                <p>A reliable, secure tool for students and researchers to verify exact word counts for essays and manuscripts without lag.</p>
               </div>
               <div class="use-case-card">
-                <h4>💻 Developers</h4>
-                <p>Quickly clean code comments, remove extra whitespace, or format documentation strings instantly.</p>
+                <h4>📱 SEO & Social Media</h4>
+                <p>Precision character counting for X, Instagram, and Meta tags to ensure your headlines and descriptions never get cut off.</p>
               </div>
             </div>
           </div>
@@ -468,7 +459,7 @@
         h1: 'Sanitize your messy data!', 
         desc: 'One click to remove extra spaces, tabs, and ghost formatting!', 
         placeholder: 'Paste text here to instantly remove double whitespaces, accidental tab spaces, and hidden tracking structures...',
-        highlight: [], highlightBtns: ['btn-cleanspaces'], 
+        highlight: [], highlightBtns: ['btn-cleanspaces', 'btn-stripmarkdown'], 
         seoTitle: 'Data Cleaning and Text Sanitization', 
         seoBody: `<p>Our <strong>online text cleaner</strong> removes duplicate spaces, stray tabs, and trailing whitespace. Clean text is vital for data integrity and professional presentations.</p>`, 
         legal: false 
@@ -568,20 +559,15 @@
 
     function updateMetrics(txt) {
       const cleanTxt = txt.trim();
-      
-      // Word Count Logic
       const words = cleanTxt === '' ? 0 : cleanTxt.split(/\s+/).length;
       document.getElementById('wordCount').textContent = words;
       
-      // Char Counts
       document.getElementById('charCount').textContent = txt.length;
       document.getElementById('charNoSpace').textContent = txt.replace(/\s/g, '').length;
       
-      // Lines Count
       const lines = txt === '' ? 0 : txt.split('\n').length;
       document.getElementById('lineCount').textContent = lines;
       
-      // Reading Time (Avg 200 WPM)
       if (words > 0) {
         const min = Math.ceil(words / 200);
         document.getElementById('readTime').textContent = min + ' min' + (min > 1 ? 's' : '');
@@ -589,7 +575,6 @@
         document.getElementById('readTime').textContent = '—';
       }
 
-      // Toggle copy button color state
       const copyBtn = document.getElementById('copyBtn');
       if (txt.length > 0) {
         copyBtn.classList.add('has-text');
@@ -620,6 +605,16 @@
       }
       if (type === 'cleanpdftext') {
         out = startText.replace(/([^\n])\n([^\n])/g, '$1 $2').replace(/[ \t]+/g, ' ').replace(/\n\s*\n/g, '\n\n').trim();
+      }
+      if (type === 'stripmarkdown') {
+        out = startText
+          .replace(/\*\*(.*?)\*\*/g, '$1')
+          .replace(/\*(.*?)\*/g, '$1')
+          .replace(/__(.*?)__/g, '$1')
+          .replace(/_(.*?)_/g, '$1')
+          .replace(/^#{1,6}\s+/gm, '')
+          .replace(/^[\s-]*•\s+/gm, '')
+          .trim();
       }
 
       ta.value = out;
@@ -653,7 +648,6 @@
       });
     }
 
-    // Routing and View state management
     function handleRoute() {
       const path = window.location.pathname;
       const config = ROUTES[path] || ROUTES['/'];
@@ -663,11 +657,9 @@
       document.getElementById('pageDesc').textContent = config.desc;
       ta.placeholder = config.placeholder;
       
-      // Update SEO area
       document.getElementById('seoTitle').textContent = config.seoTitle;
       document.getElementById('seoBody').innerHTML = config.seoBody;
       
-      // Handle visibility of layouts
       if (config.legal) {
         document.body.classList.add('is-legal');
         document.getElementById('legalFullContent').innerHTML = config.seoBody;
@@ -676,27 +668,22 @@
         document.getElementById('legalFullContent').innerHTML = '';
       }
 
-      // Manage active nav highlighting
       document.querySelectorAll('#mainNav a').forEach(a => {
         if (a.getAttribute('href') === path) a.classList.add('active');
         else a.classList.remove('active');
       });
 
-      // Clear layout card classes
       document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('highlighted'));
       document.querySelectorAll('.toolbar .btn').forEach(b => b.classList.remove('highlighted'));
 
-      // Inject new focus highlights
       config.highlight.forEach(id => document.getElementById(id)?.classList.add('highlighted'));
       config.highlightBtns.forEach(id => document.getElementById(id)?.classList.add('highlighted'));
       
-      // Hide bottom SEO blocks on text-only policy paths
       const seoWrap = document.getElementById('useCasesSection');
       if (config.legal && seoWrap) seoWrap.style.display = 'none';
       else if (seoWrap) seoWrap.style.display = 'block';
     }
 
-    // Intercept client clicks for true SPA feel
     document.addEventListener('click', e => {
       const link = e.target.closest('a');
       if (link && link.getAttribute('href')?.startsWith('/')) {
@@ -709,7 +696,6 @@
 
     window.addEventListener('popstate', handleRoute);
 
-    // Theme toggler
     function toggleDark() {
       const html = document.documentElement;
       const isDark = html.getAttribute('data-theme') === 'dark';
@@ -719,7 +705,6 @@
       document.getElementById('darkToggle').textContent = next === 'dark' ? '☀ Light Mode' : '🌙 Dark Mode';
     }
 
-    // Set initial system state
     window.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('tkt-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', savedTheme);
