@@ -45,14 +45,11 @@
       --green-bg: #f0fdf4;
       --danger: #dc2626;
       --stat-bg: #ffffff;
-      --shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 12px rgba(0,0,0,.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 10px 25px -5px rgba(0, 0, 0, 0.12);
       --radius: 10px;
       --font: 'DM Sans', sans-serif;
       --mono: 'DM Mono', monospace;
       --transition: .2s ease;
-      
-      /* UI REDESIGN: White background for textarea in Light Mode */
-      --textarea-bg: #ffffff;
     }
 
     [data-theme="dark"] {
@@ -68,10 +65,7 @@
       --green: #4ade80;
       --green-bg: #052e16;
       --stat-bg: #1c1b1a;
-      --shadow: 0 1px 3px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.2);
-      
-      /* UI REDESIGN: Distinct dark surface for textarea in Dark Mode */
-      --textarea-bg: #151413;
+      --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.4);
     }
 
     html { scroll-behavior: smooth; }
@@ -162,7 +156,7 @@
     /* Main Workspace Grid */
     .main-grid { display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start; margin-bottom: 48px; }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 16px; margin-bottom: 0; padding: 0 25px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 24px; }
     @media (max-width: 640px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
 
     .stat-card { background: var(--stat-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; text-align: center; }
@@ -170,24 +164,21 @@
     .stat-label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
     .stat-value { font-size: 22px; font-weight: 600; font-family: var(--mono); color: var(--text); letter-spacing: -.02em; line-height: 1; }
 
-    /* UI REDESIGN: Core workspace layout update */
-    .workspace { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; }
-    
-    /* UI REDESIGN: Textarea is now custom colored and sits elegantly at the very top */
-    textarea { width: 100%; min-height: 340px; padding: 25px; font-family: var(--font); font-size: 16px; line-height: 1.7; color: var(--text); background: var(--textarea-bg); border: none; border-bottom: 1px solid var(--border); outline: none; resize: vertical; transition: background var(--transition); }
+    .workspace { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    textarea { width: 100%; min-height: 320px; padding: 25px; font-family: var(--font); font-size: 16px; line-height: 1.7; color: var(--text); background: var(--surface); border: none; outline: none; resize: vertical; }
 
-    /* UI REDESIGN: Toolbar remains underneath metrics and content inputs */
-    .toolbar { padding: 16px 25px; display: flex; flex-wrap: wrap; gap: 7px; align-items: center; background: var(--surface2); }
+    .toolbar { border-top: 1px solid var(--border); padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 7px; align-items: center; background: var(--surface2); }
     .toolbar-sep { width: 1px; height: 22px; background: var(--border); margin: 0 2px; }
 
     .btn { font-family: var(--font); font-size: 12.5px; font-weight: 500; padding: 6px 13px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
     .btn.highlighted { border-color: var(--accent); background: var(--accent-muted); color: var(--accent); }
      
-    .btn-undo { font-family: var(--font); font-size: 12.5px; font-weight: 500; padding: 6px 13px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; margin-left: auto; display: flex; align-items: center; gap: 4px; transition: all var(--transition); }
-    .btn-undo:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+    .btn-undo { font-family: var(--font); font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; margin-left: auto; display: flex; align-items: center; gap: 6px; transition: all var(--transition); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .btn-undo:hover:not(:disabled) { background: var(--surface2); border-color: var(--text-muted); }
+    .btn-undo:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
      
-    .btn-copy { font-family: var(--font); font-size: 13px; font-weight: 600; padding: 7px 18px; border-radius: 6px; border: none; background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; }
-    .btn-copy.has-text { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-copy { font-family: var(--font); font-size: 13px; font-weight: 600; padding: 7px 18px; border-radius: 6px; border: none; background: var(--surface2); color: var(--text-muted); cursor: pointer; }
+    .btn-copy.has-text { background: var(--accent); color: #fff; }
     .btn-clear { font-family: var(--font); font-size: 12.5px; font-weight: 500; padding: 6px 13px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--danger); cursor: pointer; }
 
     /* ── BOTTOM CONTENT ── */
@@ -258,18 +249,16 @@
     <div class="main-grid">
       <div class="content-left">
         <div class="tool-section" id="toolSection">
-          
+          <div class="stats-grid" id="statsGrid">
+            <div class="stat-card" id="stat-words"><div class="stat-label">Words</div><div class="stat-value" id="wordCount">0</div></div>
+            <div class="stat-card" id="stat-chars"><div class="stat-label">Characters</div><div class="stat-value" id="charCount">0</div></div>
+            <div class="stat-card" id="stat-chars-ns"><div class="stat-label">Chars (No Space)</div><div class="stat-value" id="charNoSpace">0</div></div>
+            <div class="stat-card" id="stat-lines"><div class="stat-label">Lines</div><div class="stat-value" id="lineCount">0</div></div>
+            <div class="stat-card" id="stat-read"><div class="stat-label">Read Time</div><div class="stat-value" id="readTime">—</div></div>
+          </div>
+
           <div class="workspace">
             <textarea id="mainTextarea" placeholder="Start typing or paste your text here..." oninput="handleInput()"></textarea>
-            
-            <div class="stats-grid" id="statsGrid">
-              <div class="stat-card" id="stat-words"><div class="stat-label">Words</div><div class="stat-value" id="wordCount">0</div></div>
-              <div class="stat-card" id="stat-chars"><div class="stat-label">Characters</div><div class="stat-value" id="charCount">0</div></div>
-              <div class="stat-card" id="stat-chars-ns"><div class="stat-label">Chars (No Space)</div><div class="stat-value" id="charNoSpace">0</div></div>
-              <div class="stat-card" id="stat-lines"><div class="stat-label">Lines</div><div class="stat-value" id="lineCount">0</div></div>
-              <div class="stat-card" id="stat-read"><div class="stat-label">Read Time</div><div class="stat-value" id="readTime">—</div></div>
-            </div>
-
             <div class="toolbar">
               <button class="btn" id="btn-uppercase" onclick="applyTransform('uppercase')">UPPERCASE</button>
               <button class="btn" id="btn-lowercase" onclick="applyTransform('lowercase')">lowercase</button>
@@ -285,7 +274,6 @@
               <button class="btn-copy" id="copyBtn" onclick="copyText()">Copy Text</button>
             </div>
           </div>
-
         </div>
       </div>
     </div>
