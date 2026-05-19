@@ -20,9 +20,9 @@
   <meta property="twitter:description" content="Free all-in-one text utility tool. Count words and characters, convert case, and clean text formatting instantly in your browser. No sign-up required." />
   <meta property="twitter:image" content="https://toolkittext.com/favicon.png" />
 
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="shortcut icon" type="image/png" href="favicon.png" />
-  <link rel="apple-touch-icon" href="favicon.png" />
+  <link class="favicon-link" rel="icon" type="image/png" href="favicon.png" />
+  <link class="favicon-link" rel="shortcut icon" type="image/png" href="favicon.png" />
+  <link class="favicon-link" rel="apple-touch-icon" href="favicon.png" />
   
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -44,6 +44,7 @@
       --green: #16a34a;
       --green-bg: #f0fdf4;
       --danger: #dc2626;
+      --danger-bg: #fef2f2;
       --stat-bg: #ffffff;
       --shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 12px rgba(0,0,0,.05);
       --radius: 10px;
@@ -64,6 +65,7 @@
       --accent-muted: #1e3a5f;
       --green: #4ade80;
       --green-bg: #052e16;
+      --danger-bg: #2d1919;
       --stat-bg: #1c1b1a;
       --shadow: 0 1px 3px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.2);
     }
@@ -164,15 +166,14 @@
     .stat-label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
     .stat-value { font-size: 22px; font-weight: 600; font-family: var(--mono); color: var(--text); letter-spacing: -.02em; line-height: 1; }
 
-    /* REDDIT OPPDATERING: Workspace flex-retning og layout-justeringer */
     .workspace { 
       background: var(--surface); 
       border: 1px solid var(--border); 
       border-radius: var(--radius); 
       overflow: hidden; 
       box-shadow: var(--shadow); 
-      display: flex; 
-      flex-direction: column; 
+      display: flex;
+      flex-direction: column;
     }
     
     textarea { 
@@ -187,31 +188,84 @@
       border: none; 
       outline: none; 
       resize: vertical; 
-      flex-grow: 1; 
     }
 
-    /* REDDIT OPPDATERING: Border ændret fra bottom til top på toolbar for perfekt alignment under inputtet */
+    /* UI REWRITE: Toolbar nu tilpasset til at ligge i toppen med border-bottom og ensartede knapper */
     .toolbar { 
-      border-top: 1px solid var(--border); 
+      border-bottom: 1px solid var(--border); 
       padding: 12px 16px; 
       display: flex; 
       flex-wrap: wrap; 
-      gap: 7px; 
+      gap: 8px; 
       align-items: center; 
       background: var(--surface2); 
     }
-    
-    .toolbar-sep { width: 1px; height: 22px; background: var(--border); margin: 0 2px; }
 
-    .btn { font-family: var(--font); font-size: 12.5px; font-weight: 500; padding: 6px 13px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
+    .btn { 
+      font-family: var(--font); 
+      font-size: 12.5px; 
+      font-weight: 500; 
+      padding: 7px 14px; 
+      border-radius: 6px; 
+      border: 1px solid var(--border); 
+      background: var(--surface); 
+      color: var(--text); 
+      cursor: pointer;
+      min-width: 110px;
+      text-align: center;
+      transition: all var(--transition);
+    }
     .btn.highlighted { border-color: var(--accent); background: var(--accent-muted); color: var(--accent); }
      
-    .btn-undo { font-family: var(--font); font-size: 12.5px; font-weight: 500; padding: 6px 13px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; margin-left: auto; display: flex; align-items: center; gap: 4px; transition: all var(--transition); }
+    .btn-undo { 
+      font-family: var(--font); 
+      font-size: 12.5px; 
+      font-weight: 500; 
+      padding: 7px 14px; 
+      border-radius: 6px; 
+      border: 1px solid var(--border); 
+      background: var(--surface); 
+      color: var(--text); 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      gap: 4px; 
+      min-width: 110px;
+      transition: all var(--transition); 
+    }
     .btn-undo:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
      
-    .btn-copy { font-family: var(--font); font-size: 13px; font-weight: 600; padding: 7px 18px; border-radius: 6px; border: none; background: var(--surface2); color: var(--text-muted); cursor: pointer; }
-    .btn-copy.has-text { background: var(--accent); color: #fff; }
-    .btn-clear { font-family: var(--font); font-size: 12.5px; font-weight: 500; padding: 6px 13px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--danger); cursor: pointer; }
+    .btn-copy { 
+      font-family: var(--font); 
+      font-size: 13px; 
+      font-weight: 600; 
+      padding: 7px 18px; 
+      border-radius: 6px; 
+      border: none; 
+      background: var(--surface); 
+      border: 1px solid var(--border);
+      color: var(--text-muted); 
+      cursor: pointer; 
+      min-width: 110px;
+      text-align: center;
+    }
+    .btn-copy.has-text { background: var(--accent); color: #fff; border-color: var(--accent); }
+    
+    .btn-clear { 
+      font-family: var(--font); 
+      font-size: 12.5px; 
+      font-weight: 500; 
+      padding: 7px 14px; 
+      border-radius: 6px; 
+      border: 1px solid var(--border); 
+      background: var(--danger-bg); 
+      border-color: rgba(220, 38, 38, 0.2);
+      color: var(--danger); 
+      cursor: pointer; 
+      min-width: 110px;
+      text-align: center;
+    }
 
     /* ── BOTTOM CONTENT ── */
     .bottom-content { max-width: 900px; margin: 0 auto; text-align: center; }
@@ -254,8 +308,8 @@
       <h3>Clear all text?</h3>
       <p>This will permanently remove everything in the editor. This action cannot be undone.</p>
       <div style="display:flex; gap:12px; justify-content:center;">
-        <button class="btn" style="padding: 8px 20px;" onclick="closeDialog()">Cancel</button>
-        <button class="btn" style="background:var(--danger); color:white; border:none; padding: 8px 20px;" onclick="confirmClear()">Yes, clear it</button>
+        <button class="btn" style="padding: 8px 20px; min-width: auto;" onclick="closeDialog()">Cancel</button>
+        <button class="btn" style="background:var(--danger); color:white; border:none; padding: 8px 20px; min-width: auto;" onclick="confirmClear()">Yes, clear it</button>
       </div>
     </div>
   </div>
@@ -290,21 +344,19 @@
           </div>
 
           <div class="workspace">
-            <textarea id="mainTextarea" placeholder="Start typing or paste your text here..." oninput="handleInput()"></textarea>
             <div class="toolbar">
               <button class="btn" id="btn-uppercase" onclick="applyTransform('uppercase')">UPPERCASE</button>
               <button class="btn" id="btn-lowercase" onclick="applyTransform('lowercase')">lowercase</button>
               <button class="btn" id="btn-titlecase" onclick="applyTransform('titlecase')">Title Case</button>
               <button class="btn" id="btn-sentencecase" onclick="applyTransform('sentencecase')">Sentence case</button>
-              <div class="toolbar-sep"></div>
               <button class="btn" id="btn-cleanspaces" onclick="applyTransform('cleanspaces')">Clean Spaces</button>
-              <button class="btn" id="btn-cleanpdftext" onclick="applyTransform('cleanpdftext')">Fix PDF (Keep Paragraphs)</button>
-              <button class="btn" id="btn-removelinebreaks" onclick="applyTransform('removelinebreaks')">Merge Into 1 Line</button>
-              <div class="toolbar-sep"></div>
+              <button class="btn" id="btn-cleanpdftext" onclick="applyTransform('cleanpdftext')">Fix PDF</button>
+              <button class="btn" id="btn-removelinebreaks" onclick="applyTransform('removelinebreaks')">Merge 1 Line</button>
               <button class="btn-undo" id="undoBtn" onclick="undo()" disabled>↩ Undo</button>
               <button class="btn-clear" onclick="requestClear()">Clear</button>
               <button class="btn-copy" id="copyBtn" onclick="copyText()">Copy Text</button>
             </div>
+            <textarea id="mainTextarea" placeholder="Start typing or paste your text here..." oninput="handleInput()"></textarea>
           </div>
         </div>
       </div>
