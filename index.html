@@ -294,7 +294,7 @@
       </div>
     </div>
 
-    <div style="text-align:center; color: #6b6860; font-size: 0.8rem; margin: 10px;">
+    <div id="privacyNotice" style="text-align:center; color: #6b6860; font-size: 0.8rem; margin: 10px;">
       🔒 100% client-side. Nothing is ever sent to a server.
     </div>
     <pre><code id="codeOutput" style="display:block; margin: 20px;"></code></pre>
@@ -673,6 +673,11 @@
 
     function handleRoute() {
       const path = window.location.pathname;
+      if (path === '/contact') {
+        window.history.replaceState({}, '', '/');
+        handleRoute();
+        return;
+      }
       const config = ROUTES[path] || ROUTES['/'];
       
       document.title = config.title;
@@ -705,11 +710,20 @@
       const seoWrap = document.getElementById('useCasesSection');
       if (config.legal && seoWrap) seoWrap.style.display = 'none';
       else if (seoWrap) seoWrap.style.display = 'block';
+
+      const privacyNotice = document.getElementById('privacyNotice');
+      if (privacyNotice) privacyNotice.style.display = config.legal ? 'none' : 'block';
     }
 
     document.addEventListener('click', e => {
       const link = e.target.closest('a');
       if (link && link.getAttribute('href')?.startsWith('/')) {
+        const href = link.getAttribute('href');
+        if (href === '/contact') {
+          e.preventDefault();
+          window.location.href = 'mailto:ToolKitText@gmail.com';
+          return;
+        }
         e.preventDefault();
         window.history.pushState({}, '', link.href);
         handleRoute();
