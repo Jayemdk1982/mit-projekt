@@ -221,7 +221,7 @@
   </style>
 
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "49a250522c0c45dfb9ae7aed5465c6a5"}'></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-html.min.js"></script>
@@ -272,7 +272,7 @@
                 <button onclick="closeSplitView()" style="font-family:var(--font); font-size:11px; font-weight:600; padding:3px 10px; border-radius:4px; border:1px solid var(--accent); background:transparent; color:var(--accent); cursor:pointer;">✕ Close</button>
               </div>
             </div>
-            <div id="splitPreview" style="display:none; overflow:auto; background:#0d1117; max-height: 340px;">
+            <div id="splitPreview" style="display:none; overflow:auto; background:#1a1b2e; max-height: 340px;">
               <pre style="margin:0; padding: 0;"><code id="codeOutput" style="display:block; padding: 20px; font-size:14px; line-height:1.6;"></code></pre>
             </div>
 
@@ -682,7 +682,7 @@
         span.style.fontStyle = computed.fontStyle;
       });
 
-      const html = '<pre style="background:#0d1117; padding:16px; border-radius:6px; font-family:monospace; font-size:14px; line-height:1.6;">' + clone.innerHTML + '</pre>';
+      const html = '<pre style="background:#1a1b2e; padding:16px; border-radius:6px; font-family:monospace; font-size:14px; line-height:1.6;">' + clone.innerHTML + '</pre>';
       const plainText = output.textContent;
 
       const blob = new Blob([html], { type: 'text/html' });
