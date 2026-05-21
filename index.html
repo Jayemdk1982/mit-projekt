@@ -181,7 +181,7 @@
     .btn-undo:hover:not(:disabled) { background: var(--surface2); border-color: var(--text); color: var(--accent); }
     .btn-undo:disabled { opacity: 0.3; cursor: not-allowed; border-color: var(--border); box-shadow: none; }
      
-    .btn-copy { font-family: var(--font); font-size: 13px; font-weight: 600; padding: 7px 18px; border-radius: 6px; border: none; background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; }
+    .btn-copy { font-family: var(--font); font-size: 13px; font-weight: 600; padding: 7px 18px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-muted); cursor: pointer; }
     .btn-copy.has-text { background: var(--accent); color: #fff; border-color: var(--accent); }
     .btn-clear { font-family: var(--font); font-size: 12.5px; font-weight: 500; padding: 6px 13px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--danger); cursor: pointer; }
 
@@ -302,7 +302,7 @@
                 <option value="xml">XML / Razor (.cshtml)</option>
               </select>
               <button class="btn" id="btn-beautify" onclick="beautifyCode()">Beautify Code</button>
-              <button class="btn" id="copyFormattedBtn" onclick="copyFormatted()" style="display:none;">Copy Formatted</button>
+              <button class="btn-copy has-text" id="copyFormattedBtn" onclick="copyFormatted()" style="display:none;">Copy Formatted</button>
               
               <div class="toolbar-right">
                 <button class="btn-undo" id="undoBtn" onclick="undo()" disabled>↩ Undo</button>
@@ -643,15 +643,7 @@
         const btn = document.getElementById('copyFormattedBtn');
         const orig = btn.textContent;
         btn.textContent = 'Copied! ✓';
-        btn.style.background = 'var(--accent)';
-        btn.style.color = '#fff';
-        btn.style.borderColor = 'var(--accent)';
-        setTimeout(() => {
-          btn.textContent = orig;
-          btn.style.background = '';
-          btn.style.color = '';
-          btn.style.borderColor = '';
-        }, 2000);
+        setTimeout(() => { btn.textContent = orig; }, 2000);
       });
     }
 
