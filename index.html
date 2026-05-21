@@ -265,6 +265,16 @@
           <div class="workspace">
             <textarea id="mainTextarea" placeholder="Start typing or paste your text here..." oninput="handleInput()"></textarea>
             
+            <div id="splitDivider" style="display:none; position:relative; border-top: 2px solid var(--accent); background:var(--accent-muted);">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding: 6px 16px;">
+                <span style="font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--accent);">✨ Beautified Output</span>
+                <button onclick="closeSplitView()" style="font-family:var(--font); font-size:11px; font-weight:600; padding:3px 10px; border-radius:4px; border:1px solid var(--accent); background:transparent; color:var(--accent); cursor:pointer;">✕ Close</button>
+              </div>
+            </div>
+            <div id="splitPreview" style="display:none; overflow:auto; background:#0d1117; max-height: 340px;">
+              <pre style="margin:0; padding: 0;"><code id="codeOutput" style="display:block; padding: 20px; font-size:14px; line-height:1.6;"></code></pre>
+            </div>
+
             <div class="stats-grid" id="statsGrid">
               <div class="stat-card" id="stat-words"><div class="stat-label">Words</div><div class="stat-value" id="wordCount">0</div></div>
               <div class="stat-card" id="stat-chars"><div class="stat-label">Characters</div><div class="stat-value" id="charCount">0</div></div>
@@ -283,7 +293,16 @@
               <button class="btn" id="btn-cleanpdftext" onclick="applyTransform('cleanpdftext')">Fix PDF (Keep Paragraphs)</button>
               <button class="btn" id="btn-stripmarkdown" onclick="applyTransform('stripmarkdown')">Strip AI Formatting</button>
               <button class="btn" id="btn-removelinebreaks" onclick="applyTransform('removelinebreaks')">Merge Into 1 Line</button>
+              <div class="toolbar-sep"></div>
+              <select id="langSelect" style="font-family:var(--font); font-size:12.5px; font-weight:500; padding:6px 10px; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer;">
+                <option value="auto">Auto-detect</option>
+                <option value="javascript">JavaScript</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="xml">XML / Razor (.cshtml)</option>
+              </select>
               <button class="btn" id="btn-beautify" onclick="beautifyCode()">Beautify Code</button>
+              <button class="btn" id="copyFormattedBtn" onclick="copyFormatted()" style="display:none;">Copy Formatted</button>
               
               <div class="toolbar-right">
                 <button class="btn-undo" id="undoBtn" onclick="undo()" disabled>↩ Undo</button>
@@ -300,23 +319,6 @@
     <div id="privacyNotice" style="text-align:center; color: #6b6860; font-size: 0.8rem; margin: 10px;">
       🔒 100% client-side. Nothing is ever sent to a server.
     </div>
-    <div id="codeOutputPanel" style="display:none; margin: 20px 0;">
-      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
-        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-          <label style="font-size:13px; font-weight:600; color:var(--text-muted);">Language:</label>
-          <select id="langSelect" style="font-family:var(--font); font-size:13px; padding:5px 10px; border-radius:6px; border:1px solid var(--border); background:var(--surface2); color:var(--text); cursor:pointer;">
-            <option value="auto">Auto-detect</option>
-            <option value="javascript">JavaScript</option>
-            <option value="html">HTML</option>
-            <option value="css">CSS</option>
-            <option value="xml">XML / Razor (.cshtml)</option>
-          </select>
-        </div>
-        <button id="copyFormattedBtn" onclick="copyFormatted()" style="font-family:var(--font); font-size:13px; font-weight:600; padding:7px 18px; border-radius:6px; border:1px solid var(--border); background:var(--surface2); color:var(--text-muted); cursor:pointer;">Copy Formatted Code</button>
-      </div>
-      <pre style="margin:0; border-radius:10px; overflow:auto;"><code id="codeOutput"></code></pre>
-    </div>
-
     <div class="bottom-content" id="bottomContent">
         <div class="seo-section">
           <h2 id="seoTitle">About ToolKitText</h2>
@@ -588,7 +590,6 @@
         } else if (lang === 'javascript') {
           formatted = js_beautify(code, { indent_size: 2, space_in_empty_paren: true });
         } else {
-          // Auto-detect: try JS first, fall back to HTML, then plain
           const looksLikeHTML = /^\s*</.test(code);
           const looksLikeCSS = /[^{}]+\{[^{}]*\}/.test(code) && !looksLikeHTML;
           if (looksLikeHTML) formatted = html_beautify(code, { indent_size: 2, wrap_line_length: 120 });
@@ -596,25 +597,42 @@
           else formatted = js_beautify(code, { indent_size: 2, space_in_empty_paren: true });
         }
       } catch(e) {
-        formatted = code; // fallback to original if beautify fails
+        formatted = code;
       }
 
-      // Put formatted code back into the textarea
-      ta.value = formatted;
-      localStorage.setItem(SAVE_KEY, formatted);
-      updateMetrics(formatted);
-      saveToUndo();
-
-      // Show highlighted preview below
+      // Show split view inside workspace
       const output = document.getElementById('codeOutput');
-      const panel = document.getElementById('codeOutputPanel');
+      const divider = document.getElementById('splitDivider');
+      const preview = document.getElementById('splitPreview');
+      const copyBtn = document.getElementById('copyFormattedBtn');
+      const textarea = document.getElementById('mainTextarea');
+
       output.textContent = formatted;
       output.removeAttribute('data-highlighted');
       if (lang !== 'auto') output.className = 'language-' + lang;
       else output.className = '';
       hljs.highlightElement(output);
-      panel.style.display = 'block';
-      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // Shrink textarea, show preview below
+      textarea.style.minHeight = '170px';
+      textarea.style.maxHeight = '170px';
+      textarea.style.resize = 'none';
+      divider.style.display = 'block';
+      preview.style.display = 'block';
+      copyBtn.style.display = 'inline-block';
+    }
+
+    function closeSplitView() {
+      const divider = document.getElementById('splitDivider');
+      const preview = document.getElementById('splitPreview');
+      const copyBtn = document.getElementById('copyFormattedBtn');
+      const textarea = document.getElementById('mainTextarea');
+      divider.style.display = 'none';
+      preview.style.display = 'none';
+      copyBtn.style.display = 'none';
+      textarea.style.minHeight = '';
+      textarea.style.maxHeight = '';
+      textarea.style.resize = 'vertical';
     }
 
     function copyFormatted() {
