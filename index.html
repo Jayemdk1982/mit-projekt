@@ -221,6 +221,8 @@
   </style>
 
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "49a250522c0c45dfb9ae7aed5465c6a5"}'></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   </head>
 <body>
 
@@ -278,6 +280,7 @@
               <button class="btn" id="btn-cleanpdftext" onclick="applyTransform('cleanpdftext')">Fix PDF (Keep Paragraphs)</button>
               <button class="btn" id="btn-stripmarkdown" onclick="applyTransform('stripmarkdown')">Strip AI Formatting</button>
               <button class="btn" id="btn-removelinebreaks" onclick="applyTransform('removelinebreaks')">Merge Into 1 Line</button>
+              <button class="btn" id="btn-beautify" onclick="beautifyCode()">Beautify Code</button>
               
               <div class="toolbar-right">
                 <button class="btn-undo" id="undoBtn" onclick="undo()" disabled>↩ Undo</button>
@@ -290,6 +293,11 @@
         </div>
       </div>
     </div>
+
+    <div style="text-align:center; color: #6b6860; font-size: 0.8rem; margin: 10px;">
+      🔒 100% client-side. Nothing is ever sent to a server.
+    </div>
+    <pre><code id="codeOutput" style="display:block; margin: 20px;"></code></pre>
 
     <div class="bottom-content" id="bottomContent">
         <div class="seo-section">
@@ -545,6 +553,13 @@
         if (undoStack.length > MAX_UNDO) undoStack.shift();
       }
       document.getElementById('undoBtn').disabled = undoStack.length <= 1;
+    }
+
+    function beautifyCode() {
+      const output = document.getElementById('codeOutput');
+      output.textContent = ta.value;
+      hljs.highlightElement(output);
+      saveToUndo();
     }
 
     function undo() {
