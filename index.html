@@ -671,13 +671,37 @@
 
     function copyFormatted() {
       const output = document.getElementById('codeOutput');
-      const text = output.textContent;
-      if (!text) return;
-      navigator.clipboard.writeText(text).then(() => {
+      if (!output.textContent) return;
+
+      // Convert CSS classes to inline styles so colors survive in Outlook
+      const clone = output.cloneNode(true);
+      clone.querySelectorAll('span').forEach(span => {
+        const computed = getComputedStyle(span);
+        span.style.color = computed.color;
+        span.style.fontWeight = computed.fontWeight;
+        span.style.fontStyle = computed.fontStyle;
+      });
+
+      const html = '<pre style="background:#0d1117; padding:16px; border-radius:6px; font-family:monospace; font-size:14px; line-height:1.6;">' + clone.innerHTML + '</pre>';
+      const plainText = output.textContent;
+
+      const blob = new Blob([html], { type: 'text/html' });
+      const plainBlob = new Blob([plainText], { type: 'text/plain' });
+      const item = new ClipboardItem({ 'text/html': blob, 'text/plain': plainBlob });
+
+      navigator.clipboard.write([item]).then(() => {
         const btn = document.getElementById('copyFormattedBtn');
         const orig = btn.textContent;
         btn.textContent = 'Copied! ✓';
-        setTimeout(() => { btn.textContent = orig; }, 2000);
+        btn.style.background = 'var(--accent)';
+        btn.style.color = '#fff';
+        btn.style.borderColor = 'var(--accent)';
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.style.background = '';
+          btn.style.color = '';
+          btn.style.borderColor = '';
+        }, 2000);
       });
     }
 
