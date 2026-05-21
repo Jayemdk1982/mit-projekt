@@ -223,6 +223,9 @@
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "49a250522c0c45dfb9ae7aed5465c6a5"}'></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-html.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-css.min.js"></script>
   </head>
 <body>
 
@@ -297,7 +300,22 @@
     <div id="privacyNotice" style="text-align:center; color: #6b6860; font-size: 0.8rem; margin: 10px;">
       🔒 100% client-side. Nothing is ever sent to a server.
     </div>
-    <pre><code id="codeOutput" style="display:block; margin: 20px;"></code></pre>
+    <div id="codeOutputPanel" style="display:none; margin: 20px 0;">
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <label style="font-size:13px; font-weight:600; color:var(--text-muted);">Language:</label>
+          <select id="langSelect" style="font-family:var(--font); font-size:13px; padding:5px 10px; border-radius:6px; border:1px solid var(--border); background:var(--surface2); color:var(--text); cursor:pointer;">
+            <option value="auto">Auto-detect</option>
+            <option value="javascript">JavaScript</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+            <option value="xml">XML / Razor (.cshtml)</option>
+          </select>
+        </div>
+        <button id="copyFormattedBtn" onclick="copyFormatted()" style="font-family:var(--font); font-size:13px; font-weight:600; padding:7px 18px; border-radius:6px; border:1px solid var(--border); background:var(--surface2); color:var(--text-muted); cursor:pointer;">Copy Formatted Code</button>
+      </div>
+      <pre style="margin:0; border-radius:10px; overflow:auto;"><code id="codeOutput"></code></pre>
+    </div>
 
     <div class="bottom-content" id="bottomContent">
         <div class="seo-section">
@@ -556,10 +574,67 @@
     }
 
     function beautifyCode() {
-      const output = document.getElementById('codeOutput');
-      output.textContent = ta.value;
-      hljs.highlightElement(output);
+      const code = ta.value.trim();
+      if (!code) return;
+
+      const lang = document.getElementById('langSelect').value;
+      let formatted = code;
+
+      try {
+        if (lang === 'html' || lang === 'xml') {
+          formatted = html_beautify(code, { indent_size: 2, wrap_line_length: 120 });
+        } else if (lang === 'css') {
+          formatted = css_beautify(code, { indent_size: 2 });
+        } else if (lang === 'javascript') {
+          formatted = js_beautify(code, { indent_size: 2, space_in_empty_paren: true });
+        } else {
+          // Auto-detect: try JS first, fall back to HTML, then plain
+          const looksLikeHTML = /^\s*</.test(code);
+          const looksLikeCSS = /[^{}]+\{[^{}]*\}/.test(code) && !looksLikeHTML;
+          if (looksLikeHTML) formatted = html_beautify(code, { indent_size: 2, wrap_line_length: 120 });
+          else if (looksLikeCSS) formatted = css_beautify(code, { indent_size: 2 });
+          else formatted = js_beautify(code, { indent_size: 2, space_in_empty_paren: true });
+        }
+      } catch(e) {
+        formatted = code; // fallback to original if beautify fails
+      }
+
+      // Put formatted code back into the textarea
+      ta.value = formatted;
+      localStorage.setItem(SAVE_KEY, formatted);
+      updateMetrics(formatted);
       saveToUndo();
+
+      // Show highlighted preview below
+      const output = document.getElementById('codeOutput');
+      const panel = document.getElementById('codeOutputPanel');
+      output.textContent = formatted;
+      output.removeAttribute('data-highlighted');
+      if (lang !== 'auto') output.className = 'language-' + lang;
+      else output.className = '';
+      hljs.highlightElement(output);
+      panel.style.display = 'block';
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function copyFormatted() {
+      const output = document.getElementById('codeOutput');
+      const text = output.textContent;
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyFormattedBtn');
+        const orig = btn.textContent;
+        btn.textContent = 'Copied! ✓';
+        btn.style.background = 'var(--accent)';
+        btn.style.color = '#fff';
+        btn.style.borderColor = 'var(--accent)';
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.style.background = '';
+          btn.style.color = '';
+          btn.style.borderColor = '';
+        }, 2000);
+      });
     }
 
     function undo() {
